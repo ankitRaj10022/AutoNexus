@@ -39,10 +39,10 @@ export default function LoginPage() {
       <div className="w-full max-w-md animate-fade-in">
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
             <Zap className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl font-bold bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
             AutoNexus
           </h1>
         </div>
@@ -57,43 +57,91 @@ export default function LoginPage() {
             {isRegister && (
               <>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1.5">Full Name</label>
-                  <input type="text" className="input-field" value={fullName}
-                    onChange={(e) => setFullName(e.target.value)} required placeholder="John Doe" />
+                  <label className="block text-sm text-gray-400 mb-1.5">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    placeholder="John Doe"
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1.5">Workspace Name</label>
-                  <input type="text" className="input-field" value={workspaceName}
-                    onChange={(e) => setWorkspaceName(e.target.value)} required placeholder="My Team" />
+                  <label className="block text-sm text-gray-400 mb-1.5">
+                    Workspace Name
+                  </label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={workspaceName}
+                    onChange={(e) => setWorkspaceName(e.target.value)}
+                    required
+                    placeholder="My Team"
+                  />
                 </div>
               </>
             )}
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5">Email</label>
-              <input type="email" className="input-field" value={email}
-                onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com" />
+              <label className="block text-sm text-gray-400 mb-1.5">
+                Email
+              </label>
+              <input
+                type="email"
+                className="input-field"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+              />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1.5">Password</label>
-              <input type="password" className="input-field" value={password}
-                onChange={(e) => setPassword(e.target.value)} required minLength={8} placeholder="••••••••" />
+              <label className="block text-sm text-gray-400 mb-1.5">
+                Password
+              </label>
+              <input
+                type="password"
+                className="input-field"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
+                placeholder="••••••••"
+              />
             </div>
 
             {error && (
-              <div className="text-sm text-red-400 bg-red-400/10 px-3 py-2 rounded-lg">{error}</div>
+              <div className="text-sm text-red-400 bg-red-400/10 px-3 py-2 rounded-lg">
+                {error}
+              </div>
             )}
 
-            <button type="submit" className="btn-primary w-full" disabled={loading}>
-              {loading ? "Please wait..." : isRegister ? "Create Account" : "Sign In"}
+            <button
+              type="submit"
+              className="btn-primary w-full"
+              disabled={loading}
+            >
+              {loading
+                ? "Please wait..."
+                : isRegister
+                  ? "Create Account"
+                  : "Sign In"}
             </button>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-400">
             {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
-            <button onClick={() => { setIsRegister(!isRegister); setError(""); }}
-              className="text-indigo-400 hover:text-indigo-300 font-medium">
+            <button
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError("");
+              }}
+              className="text-indigo-400 hover:text-indigo-300 font-medium"
+            >
               {isRegister ? "Sign in" : "Create one"}
             </button>
           </div>
