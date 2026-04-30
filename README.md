@@ -106,5 +106,4 @@ docker-compose exec api alembic upgrade head
 | WS | `/ws/executions/{id}` | Live execution stream |
 
 ## License
-
-MIT
+This project is licensed under the [MIT License](LICENSE).
