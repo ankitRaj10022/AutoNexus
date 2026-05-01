@@ -8,7 +8,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, HTTPException, status
-from sqlalchemy import func, select
+from sqlalchemy import select
 
 from app.core.deps import CurrentUser, CurrentTenant, DbSession
 from app.core.security import generate_api_key
@@ -17,7 +17,6 @@ from app.schemas.api_key import (
     APIKeyCreateRequest,
     APIKeyCreateResponse,
     APIKeyListResponse,
-    APIKeyResponse,
 )
 
 router = APIRouter(prefix="/api-keys")

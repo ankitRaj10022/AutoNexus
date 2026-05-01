@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { Zap } from "lucide-react";
+
+import { useAuth } from "@/lib/auth";
 
 export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
@@ -16,10 +17,11 @@ export default function LoginPage() {
   const { login, register } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       if (isRegister) {
         await register(email, password, fullName, workspaceName);
@@ -27,8 +29,12 @@ export default function LoginPage() {
         await login(email, password);
       }
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Authentication failed");
+    } catch (errorValue: unknown) {
+      setError(
+        errorValue instanceof Error
+          ? errorValue.message
+          : "Authentication failed",
+      );
     } finally {
       setLoading(false);
     }
@@ -37,7 +43,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md animate-fade-in">
-        {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
             <Zap className="w-6 h-6 text-white" />
@@ -47,7 +52,6 @@ export default function LoginPage() {
           </h1>
         </div>
 
-        {/* Card */}
         <div className="glass-card p-8">
           <h2 className="text-xl font-semibold text-center mb-6">
             {isRegister ? "Create your account" : "Welcome back"}
@@ -64,7 +68,7 @@ export default function LoginPage() {
                     type="text"
                     className="input-field"
                     value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    onChange={(event) => setFullName(event.target.value)}
                     required
                     placeholder="John Doe"
                   />
@@ -77,7 +81,7 @@ export default function LoginPage() {
                     type="text"
                     className="input-field"
                     value={workspaceName}
-                    onChange={(e) => setWorkspaceName(e.target.value)}
+                    onChange={(event) => setWorkspaceName(event.target.value)}
                     required
                     placeholder="My Team"
                   />
@@ -93,7 +97,7 @@ export default function LoginPage() {
                 type="email"
                 className="input-field"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(event) => setEmail(event.target.value)}
                 required
                 placeholder="you@example.com"
               />
@@ -107,10 +111,10 @@ export default function LoginPage() {
                 type="password"
                 className="input-field"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(event) => setPassword(event.target.value)}
                 required
                 minLength={8}
-                placeholder="••••••••"
+                placeholder="********"
               />
             </div>
 

@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 
 import redis
 from sqlalchemy import create_engine, select, update
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
 from app.celery_app import celery
 from app.core.config import settings

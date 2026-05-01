@@ -12,7 +12,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func, select
 
 from app.core.deps import CurrentUser, CurrentTenant, DbSession, require_role
-from app.core.security import hash_password
 from app.models.user import User, UserRole
 from app.schemas.user import UserListResponse, UserResponse, UserUpdateRequest
 

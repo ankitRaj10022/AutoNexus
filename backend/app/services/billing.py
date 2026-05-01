@@ -8,7 +8,6 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.models.subscription import UsageRecord
-from app.models.tenant import Workspace
 
 class BillingService:
     PLAN_FEATURES = {

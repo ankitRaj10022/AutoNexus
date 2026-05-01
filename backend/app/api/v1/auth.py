@@ -14,7 +14,6 @@ from jose import JWTError
 from sqlalchemy import select
 
 from app.core.config import settings
-from app.core.database import get_db
 from app.core.deps import CurrentUser, DbSession
 from app.core.security import (
     create_access_token,

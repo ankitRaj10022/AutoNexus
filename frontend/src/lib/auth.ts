@@ -1,14 +1,21 @@
 "use client";
 
 import { create } from "zustand";
+
 import { api } from "./api";
+import type { User } from "./types";
 
 interface AuthState {
-  user: any | null;
+  user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, fullName: string, workspaceName: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    fullName: string,
+    workspaceName: string,
+  ) => Promise<void>;
   logout: () => void;
   loadUser: () => Promise<void>;
 }
@@ -39,7 +46,11 @@ export const useAuth = create<AuthState>((set) => ({
   loadUser: async () => {
     try {
       const token = localStorage.getItem("access_token");
-      if (!token) { set({ isLoading: false }); return; }
+      if (!token) {
+        set({ isLoading: false });
+        return;
+      }
+
       const user = await api.getMe();
       set({ user, isAuthenticated: true, isLoading: false });
     } catch {

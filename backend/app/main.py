@@ -20,7 +20,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.core.config import settings
+from app.middleware.logging import setup_logging
+from app.middleware.rate_limit import RateLimitMiddleware
+from app.middleware.tenant import TenantMiddleware
 
+setup_logging()
 logger = structlog.get_logger()
 
 
@@ -68,6 +72,8 @@ def create_app() -> FastAPI:
     )
 
     # ── CORS ─────────────────────────────────────────────────
+    app.add_middleware(TenantMiddleware)
+    app.add_middleware(RateLimitMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.BACKEND_CORS_ORIGINS,

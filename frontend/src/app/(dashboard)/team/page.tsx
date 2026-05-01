@@ -1,17 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Mail, MoreVertical, Shield, UserPlus, Users } from "lucide-react";
+
 import { api } from "@/lib/api";
-import { Users, Mail, UserPlus, Shield, MoreVertical } from "lucide-react";
+import type { User } from "@/lib/types";
 
 export default function TeamPage() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.getUsers().then(data => {
-      setUsers(data.users || []);
-    }).catch(console.error).finally(() => setLoading(false));
+    api
+      .getUsers()
+      .then((data) => {
+        setUsers(data.users || []);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -19,10 +25,16 @@ export default function TeamPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Team</h1>
-          <p className="text-gray-400 mt-1">Manage workspace members and roles</p>
+          <p className="text-gray-400 mt-1">
+            Manage workspace members and roles
+          </p>
         </div>
-        <button className="btn-primary flex items-center gap-2">
-          <UserPlus className="w-4 h-4" /> Invite Member
+        <button
+          className="btn-primary flex items-center gap-2 opacity-60 cursor-not-allowed"
+          disabled
+          title="Invite flow is not implemented yet"
+        >
+          <UserPlus className="w-4 h-4" /> Invite Soon
         </button>
       </div>
 
@@ -41,11 +53,14 @@ export default function TeamPage() {
           </div>
         ) : (
           <div className="divide-y divide-white/5">
-            {users.map(user => (
-              <div key={user.id} className="p-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors">
+            {users.map((user) => (
+              <div
+                key={user.id}
+                className="p-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+              >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-lg">
-                    {user.full_name?.charAt(0).toUpperCase() || "U"}
+                    {user.full_name.charAt(0).toUpperCase() || "U"}
                   </div>
                   <div>
                     <p className="font-medium">{user.full_name}</p>
@@ -55,9 +70,15 @@ export default function TeamPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
-                  <span className={`badge ${user.role === 'admin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'badge-info'}`}>
+                  <span
+                    className={`badge ${
+                      user.role === "admin"
+                        ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                        : "badge-info"
+                    }`}
+                  >
                     <Shield className="w-3 h-3 inline mr-1" />
                     {user.role}
                   </span>

@@ -1,33 +1,35 @@
 """
-Scheduler service to trigger time-based workflows.
+Scheduler service to inspect time-based workflows.
 """
 
-import structlog
+from __future__ import annotations
+
 from datetime import datetime, timezone
-from sqlalchemy.ext.asyncio import AsyncSession
+
+import structlog
 from sqlalchemy import select
 
-from app.core.database import async_session_maker
+from app.core.database import async_session_factory
 from app.models.workflow import Workflow
-from app.services.workflow_engine import WorkflowEngine
 
 logger = structlog.get_logger()
 
-async def poll_scheduled_workflows():
-    """Poll for workflows that need to be triggered based on schedule."""
-    # In a real app, you'd store cron schedules and next_run_at in the DB.
-    # This is a simplified placeholder for the Celery Beat task.
-    logger.info("polling_scheduled_workflows", timestamp=datetime.now(timezone.utc).isoformat())
-    
-    async with async_session_maker() as db:
-        # Example query: select workflows where is_active=True and next_run_at <= now()
-        # This assumes Workflow model has a schedule/next_run_at field. 
-        # Since it's a basic implementation, we just log.
+
+async def poll_scheduled_workflows() -> int:
+    """Return the number of active cron workflows visible to the scheduler."""
+    logger.info(
+        "polling_scheduled_workflows",
+        timestamp=datetime.now(timezone.utc).isoformat(),
+    )
+
+    async with async_session_factory() as db:
         result = await db.execute(
-            select(Workflow).where(Workflow.is_active == True)
+            select(Workflow).where(
+                Workflow.is_active.is_(True),
+                Workflow.schedule.isnot(None),
+                Workflow.trigger_type == "cron",
+            )
         )
         workflows = result.scalars().all()
-        
-        for wf in workflows:
-            # Check if this workflow has a time-trigger node that is due
-            pass
+        logger.info("scheduled_workflows_polled", count=len(workflows))
+        return len(workflows)

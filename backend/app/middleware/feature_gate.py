@@ -2,7 +2,7 @@
 Feature flag and tier-based access control middleware/dependencies.
 """
 
-from typing import Callable, Any
+from typing import Callable
 from fastapi import HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select

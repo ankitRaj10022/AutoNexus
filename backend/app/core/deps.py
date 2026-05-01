@@ -17,9 +17,8 @@ from jose import JWTError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
 from app.core.database import get_db
-from app.core.security import decode_access_token, verify_api_key
+from app.core.security import decode_access_token
 from app.models.api_key import APIKey
 from app.models.user import User, UserRole
 from app.models.tenant import Workspace
