@@ -5,8 +5,17 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "AutoNexus — Workflow Automation Platform",
+  title: {
+    default: "AutoNexus | Workflow Automation",
+    template: "%s | AutoNexus",
+  },
   description: "Production-grade multi-tenant workflow automation platform with visual DAG editor",
+  applicationName: "AutoNexus",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
