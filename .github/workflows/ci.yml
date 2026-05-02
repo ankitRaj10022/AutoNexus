@@ -10,6 +10,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   lint:
@@ -59,11 +60,12 @@ jobs:
     - name: Run tests
       working-directory: backend
       env:
+        PYTHONPATH: .
         DATABASE_URL: postgresql+asyncpg://test:test@localhost:5432/test
         REDIS_URL: redis://localhost:6379/0
         JWT_SECRET_KEY: test-secret-key-for-ci
         JWT_REFRESH_SECRET_KEY: test-refresh-secret-for-ci
-      run: pytest tests/ -v --tb=short
+      run: python -m pytest tests -v --tb=short
 
   test-frontend:
     runs-on: ubuntu-latest
