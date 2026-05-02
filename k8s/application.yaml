@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: autonexus-api:latest
+          image: ghcr.io/ankitraj10022/autonexus/api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
@@ -48,7 +48,7 @@ spec:
                 name: autonexus-config
           readinessProbe:
             httpGet:
-              path: /api/v1/health/ready
+              path: /ready
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 5
@@ -69,7 +69,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: autonexus-api:latest
+          image: ghcr.io/ankitraj10022/autonexus/api:latest
           imagePullPolicy: IfNotPresent
           command: ["celery", "-A", "app.celery_app", "worker", "-l", "info", "-Q", "workflows", "-c", "4"]
           envFrom:
@@ -92,7 +92,7 @@ spec:
     spec:
       containers:
         - name: beat
-          image: autonexus-api:latest
+          image: ghcr.io/ankitraj10022/autonexus/api:latest
           imagePullPolicy: IfNotPresent
           command: ["celery", "-A", "app.celery_app", "beat", "-l", "info"]
           envFrom:
@@ -128,7 +128,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: autonexus-frontend:latest
+          image: ghcr.io/ankitraj10022/autonexus/frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
