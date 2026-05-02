@@ -1,12 +1,7 @@
-name: AutoNexus CI/CD
+name: AutoNexus Manual Deploy
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   DOCKER_REGISTRY: ghcr.io

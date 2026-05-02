@@ -116,7 +116,7 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     needs: docker-build
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     environment: staging
     steps:
       - uses: actions/checkout@v4
@@ -126,9 +126,31 @@ jobs:
   deploy-production:
     runs-on: ubuntu-latest
     needs: docker-build
-    if: github.event_name == 'release'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: production
     steps:
       - uses: actions/checkout@v4
+      - name: Normalize image names
+        id: image-vars
+        run: |
+          repository=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+          echo "api=${{ env.REGISTRY }}/${repository}/api" >> "$GITHUB_OUTPUT"
+          echo "frontend=${{ env.REGISTRY }}/${repository}/frontend" >> "$GITHUB_OUTPUT"
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+          echo "KUBECONFIG=kubeconfig.yaml" >> "$GITHUB_ENV"
       - name: Deploy to production
-        run: echo "Deploy to production K8s cluster"
+        run: |
+          kubectl apply -f k8s/infrastructure.yaml
+          sed -i 's|autonexus-api:latest|${{ steps.image-vars.outputs.api }}:${{ github.sha }}|g' k8s/application.yaml
+          sed -i 's|autonexus-frontend:latest|${{ steps.image-vars.outputs.frontend }}:${{ github.sha }}|g' k8s/application.yaml
+          kubectl apply -f k8s/application.yaml
+          kubectl apply -f k8s/ingress.yaml
+      - name: Verify production rollout
+        run: |
+          kubectl rollout status deployment/api
+          kubectl rollout status deployment/worker
+          kubectl rollout status deployment/frontend
