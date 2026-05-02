@@ -136,25 +136,27 @@ jobs:
           repository=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
           echo "api=${{ env.REGISTRY }}/${repository}/api" >> "$GITHUB_OUTPUT"
           echo "frontend=${{ env.REGISTRY }}/${repository}/frontend" >> "$GITHUB_OUTPUT"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
-      - name: Configure kubectl
-        env:
-          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
+      - name: Configure kubectl for EKS
         run: |
-          config_path="$RUNNER_TEMP/kubeconfig.yaml"
-          printf '%s' "$KUBECONFIG_CONTENT" > "$config_path"
-
-          if ! grep -q "apiVersion:" "$config_path"; then
-            printf '%s' "$KUBECONFIG_CONTENT" | base64 -d > "$config_path"
-          fi
-
-          if ! grep -q "apiVersion:" "$config_path"; then
-            echo "KUBECONFIG secret is not valid kubeconfig YAML or base64-encoded kubeconfig" >&2
+          if [ -z "${{ vars.AWS_REGION }}" ] || [ -z "${{ vars.EKS_CLUSTER_NAME }}" ]; then
+            echo "Missing AWS_REGION or EKS_CLUSTER_NAME environment variables." >&2
             exit 1
           fi
 
-          chmod 600 "$config_path"
+          config_path="$RUNNER_TEMP/kubeconfig.yaml"
+          aws eks update-kubeconfig \
+            --name "${{ vars.EKS_CLUSTER_NAME }}" \
+            --region "${{ vars.AWS_REGION }}" \
+            --kubeconfig "$config_path"
+
           echo "KUBECONFIG=$config_path" >> "$GITHUB_ENV"
           kubectl config current-context
           kubectl cluster-info
