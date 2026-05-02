@@ -9,29 +9,29 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository | lower }}
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Install linters
-      run: pip install ruff
-    - name: Lint backend
-      run: ruff check backend/
-    - uses: actions/setup-node@v4
-      with:
-        node-version: "20"
-    - name: Lint frontend
-      working-directory: frontend
-      run: |
-        npm ci
-        npm run lint
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install linters
+        run: pip install ruff
+      - name: Lint backend
+        run: ruff check backend/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Lint frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run lint
 
   test-backend:
     runs-on: ubuntu-latest
@@ -50,36 +50,36 @@ jobs:
         ports: ["6379:6379"]
         options: --health-cmd "redis-cli ping" --health-interval 10s
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Install deps
-      working-directory: backend
-      run: pip install -r requirements.txt
-    - name: Run tests
-      working-directory: backend
-      env:
-        PYTHONPATH: .
-        DATABASE_URL: postgresql+asyncpg://test:test@localhost:5432/test
-        REDIS_URL: redis://localhost:6379/0
-        JWT_SECRET_KEY: test-secret-key-for-ci
-        JWT_REFRESH_SECRET_KEY: test-refresh-secret-for-ci
-      run: python -m pytest tests -v --tb=short
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        working-directory: backend
+        run: pip install -r requirements.txt
+      - name: Run tests
+        working-directory: backend
+        env:
+          PYTHONPATH: .
+          DATABASE_URL: postgresql+asyncpg://test:test@localhost:5432/test
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET_KEY: test-secret-key-for-ci
+          JWT_REFRESH_SECRET_KEY: test-refresh-secret-for-ci
+        run: python -m pytest tests -v --tb=short
 
   test-frontend:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: "20"
-    - name: Install and test
-      working-directory: frontend
-      run: |
-        npm ci
-        npm run build
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install and test
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
 
   docker-build:
     runs-on: ubuntu-latest
@@ -89,24 +89,24 @@ jobs:
       contents: read
       packages: write
     steps:
-    - uses: actions/checkout@v4
-    - uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Build and push API
-      uses: docker/build-push-action@v5
-      with:
-        context: ./backend
-        push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/api:${{ github.sha }}
-    - name: Build and push Frontend
-      uses: docker/build-push-action@v5
-      with:
-        context: ./frontend
-        push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ github.sha }}
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push API
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/api:${{ github.sha }}
+      - name: Build and push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ github.sha }}
 
   deploy-staging:
     runs-on: ubuntu-latest
@@ -114,9 +114,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment: staging
     steps:
-    - uses: actions/checkout@v4
-    - name: Deploy to staging
-      run: echo "Deploy to staging K8s cluster with kubectl set image"
+      - uses: actions/checkout@v4
+      - name: Deploy to staging
+        run: echo "Deploy to staging K8s cluster with kubectl set image"
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -124,6 +124,6 @@ jobs:
     if: github.event_name == 'release'
     environment: production
     steps:
-    - uses: actions/checkout@v4
-    - name: Deploy to production
-      run: echo "Deploy to production K8s cluster"
+      - uses: actions/checkout@v4
+      - name: Deploy to production
+        run: echo "Deploy to production K8s cluster"
