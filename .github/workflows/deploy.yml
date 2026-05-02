@@ -128,6 +128,7 @@ jobs:
             --region "${{ vars.AWS_REGION }}" \
             --kubeconfig "$config_path"
 
+          export KUBECONFIG="$config_path"
           echo "KUBECONFIG=$config_path" >> "$GITHUB_ENV"
           kubectl config current-context
           kubectl cluster-info
