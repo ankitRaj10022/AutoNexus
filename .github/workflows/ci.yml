@@ -137,8 +137,6 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: production
     timeout-minutes: 30
-    env:
-      KUBECONFIG: ${{ runner.temp }}/kubeconfig.yaml
     steps:
       - uses: actions/checkout@v4
       - name: Normalize image names
@@ -162,17 +160,16 @@ jobs:
             exit 1
           fi
 
-          mkdir -p "$(dirname "$KUBECONFIG")"
+          export KUBECONFIG="$RUNNER_TEMP/kubeconfig.yaml"
           aws eks update-kubeconfig \
             --name "${{ vars.EKS_CLUSTER_NAME }}" \
             --region "${{ vars.AWS_REGION }}" \
             --kubeconfig "$KUBECONFIG"
 
+          echo "KUBECONFIG=$KUBECONFIG" >> "$GITHUB_ENV"
           kubectl config current-context
           kubectl cluster-info
       - name: Deploy to production
-        env:
-          KUBECONFIG: ${{ env.KUBECONFIG }}
         run: |
           kubectl apply -f k8s/infrastructure.yaml
           rendered_manifest="$(mktemp)"
@@ -182,8 +179,6 @@ jobs:
           kubectl apply -f "$rendered_manifest"
           kubectl apply -f k8s/ingress.yaml
       - name: Verify production rollout
-        env:
-          KUBECONFIG: ${{ env.KUBECONFIG }}
         run: |
           kubectl rollout status statefulset/postgres
           kubectl rollout status statefulset/redis
