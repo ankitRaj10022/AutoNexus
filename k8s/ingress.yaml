@@ -8,7 +8,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - http:
+    - host: autonexus.work.gd
+      http:
         paths:
           - path: /health
             pathType: Prefix
