@@ -109,9 +109,25 @@ jobs:
         uses: azure/setup-kubectl@v3
         
       - name: Configure kubectl
+        env:
+          KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
         run: |
-          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-          echo "KUBECONFIG=kubeconfig.yaml" >> "$GITHUB_ENV"
+          config_path="$RUNNER_TEMP/kubeconfig.yaml"
+          printf '%s' "$KUBECONFIG_CONTENT" > "$config_path"
+
+          if ! grep -q "apiVersion:" "$config_path"; then
+            printf '%s' "$KUBECONFIG_CONTENT" | base64 -d > "$config_path"
+          fi
+
+          if ! grep -q "apiVersion:" "$config_path"; then
+            echo "KUBECONFIG secret is not valid kubeconfig YAML or base64-encoded kubeconfig" >&2
+            exit 1
+          fi
+
+          chmod 600 "$config_path"
+          echo "KUBECONFIG=$config_path" >> "$GITHUB_ENV"
+          kubectl config current-context
+          kubectl cluster-info
           
       - name: Deploy to Kubernetes
         run: |
