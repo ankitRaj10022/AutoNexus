@@ -9,7 +9,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository | lower }}
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -90,6 +89,12 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Normalize image names
+        id: image-vars
+        run: |
+          repository=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+          echo "api=${{ env.REGISTRY }}/${repository}/api" >> "$GITHUB_OUTPUT"
+          echo "frontend=${{ env.REGISTRY }}/${repository}/frontend" >> "$GITHUB_OUTPUT"
       - uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -100,13 +105,13 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/api:${{ github.sha }}
+          tags: ${{ steps.image-vars.outputs.api }}:${{ github.sha }}
       - name: Build and push Frontend
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ github.sha }}
+          tags: ${{ steps.image-vars.outputs.frontend }}:${{ github.sha }}
 
   deploy-staging:
     runs-on: ubuntu-latest
