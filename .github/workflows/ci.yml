@@ -11,6 +11,10 @@ env:
   REGISTRY: ghcr.io
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -132,6 +136,7 @@ jobs:
     needs: docker-build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: production
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Normalize image names
@@ -166,14 +171,23 @@ jobs:
           kubectl config current-context
           kubectl cluster-info
       - name: Deploy to production
+        env:
+          KUBECONFIG: ${{ runner.temp }}/kubeconfig.yaml
         run: |
           kubectl apply -f k8s/infrastructure.yaml
-          sed -i 's|ghcr.io/ankitraj10022/autonexus/api:latest|${{ steps.image-vars.outputs.api }}:${{ github.sha }}|g' k8s/application.yaml
-          sed -i 's|ghcr.io/ankitraj10022/autonexus/frontend:latest|${{ steps.image-vars.outputs.frontend }}:${{ github.sha }}|g' k8s/application.yaml
-          kubectl apply -f k8s/application.yaml
+          rendered_manifest="$(mktemp)"
+          cp k8s/application.yaml "$rendered_manifest"
+          sed -i 's|ghcr.io/ankitraj10022/autonexus/api:latest|${{ steps.image-vars.outputs.api }}:${{ github.sha }}|g' "$rendered_manifest"
+          sed -i 's|ghcr.io/ankitraj10022/autonexus/frontend:latest|${{ steps.image-vars.outputs.frontend }}:${{ github.sha }}|g' "$rendered_manifest"
+          kubectl apply -f "$rendered_manifest"
           kubectl apply -f k8s/ingress.yaml
       - name: Verify production rollout
+        env:
+          KUBECONFIG: ${{ runner.temp }}/kubeconfig.yaml
         run: |
+          kubectl rollout status statefulset/postgres
+          kubectl rollout status statefulset/redis
           kubectl rollout status deployment/api
           kubectl rollout status deployment/worker
+          kubectl rollout status deployment/beat
           kubectl rollout status deployment/frontend

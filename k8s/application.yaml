@@ -3,10 +3,13 @@ kind: ConfigMap
 metadata:
   name: autonexus-config
 data:
-  ENVIRONMENT: "production"
+  APP_ENV: "production"
   DATABASE_URL: "postgresql+asyncpg://autonexus:devpassword123@postgres:5432/autonexus"
   REDIS_URL: "redis://redis:6379/0"
-  JWT_SECRET: "k8s-production-jwt-secret-replace-me"
+  CELERY_BROKER_URL: "redis://redis:6379/0"
+  CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+  JWT_SECRET_KEY: "k8s-production-jwt-secret-replace-me"
+  JWT_REFRESH_SECRET_KEY: "k8s-production-jwt-refresh-secret-replace-me"
   STRIPE_SECRET_KEY: "sk_test_replace_me"
   STRIPE_WEBHOOK_SECRET: "whsec_replace_me"
 ---
@@ -71,7 +74,7 @@ spec:
         - name: worker
           image: ghcr.io/ankitraj10022/autonexus/api:latest
           imagePullPolicy: IfNotPresent
-          command: ["celery", "-A", "app.celery_app", "worker", "-l", "info", "-Q", "workflows", "-c", "4"]
+          command: ["celery", "-A", "app.celery_app.celery", "worker", "--loglevel=info", "--concurrency=4"]
           envFrom:
             - configMapRef:
                 name: autonexus-config
@@ -94,7 +97,7 @@ spec:
         - name: beat
           image: ghcr.io/ankitraj10022/autonexus/api:latest
           imagePullPolicy: IfNotPresent
-          command: ["celery", "-A", "app.celery_app", "beat", "-l", "info"]
+          command: ["celery", "-A", "app.celery_app.celery", "beat", "--loglevel=info"]
           envFrom:
             - configMapRef:
                 name: autonexus-config
