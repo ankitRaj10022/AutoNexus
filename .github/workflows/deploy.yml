@@ -1,4 +1,4 @@
-name: AutoNexus Manual Deploy
+name: AutoNexus Deploy
 
 on:
   workflow_dispatch:
@@ -18,30 +18,30 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          
+          python-version: "3.11"
+
       - name: Install backend dependencies
         run: |
           cd backend
           python -m pip install --upgrade pip
           pip install ruff pytest httpx
           pip install -r requirements.txt
-          
+
       - name: Lint backend
         run: |
           cd backend
           ruff check .
-          
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          
+          node-version: "20"
+
       - name: Install frontend dependencies
         run: |
           cd frontend
           npm ci
-          
+
       - name: Build frontend
         run: |
           cd frontend
@@ -54,7 +54,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    
+
     steps:
       - uses: actions/checkout@v5
 
@@ -94,7 +94,7 @@ jobs:
     needs: build-and-push
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v5
 
@@ -104,17 +104,17 @@ jobs:
           owner=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
           echo "backend=${{ env.DOCKER_REGISTRY }}/${owner}/${{ env.BACKEND_IMAGE_NAME }}" >> "$GITHUB_OUTPUT"
           echo "frontend=${{ env.DOCKER_REGISTRY }}/${owner}/${{ env.FRONTEND_IMAGE_NAME }}" >> "$GITHUB_OUTPUT"
-      
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-      
+
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
-        
+
       - name: Configure kubectl for EKS
         run: |
           if [ -z "${{ vars.AWS_REGION }}" ] || [ -z "${{ vars.EKS_CLUSTER_NAME }}" ]; then
@@ -131,20 +131,20 @@ jobs:
           echo "KUBECONFIG=$config_path" >> "$GITHUB_ENV"
           kubectl config current-context
           kubectl cluster-info
-          
+
       - name: Deploy to Kubernetes
         run: |
           # Apply infrastructure (DB, Redis)
           kubectl apply -f k8s/infrastructure.yaml
-          
+
           # Update application images with new tags
           sed -i 's|autonexus-api:latest|${{ steps.image-vars.outputs.backend }}:${{ github.sha }}|g' k8s/application.yaml
           sed -i 's|autonexus-frontend:latest|${{ steps.image-vars.outputs.frontend }}:${{ github.sha }}|g' k8s/application.yaml
-          
+
           # Apply application and ingress
           kubectl apply -f k8s/application.yaml
           kubectl apply -f k8s/ingress.yaml
-          
+
       - name: Verify Deployment
         run: |
           kubectl rollout status deployment/api
