@@ -170,24 +170,24 @@ jobs:
 
           kubectl config current-context
           kubectl cluster-info
-          - name: Deploy to production
-            env:
-              KUBECONFIG: ${{ env.KUBECONFIG }}
-            run: |
-              kubectl apply -f k8s/infrastructure.yaml
-              rendered_manifest="$(mktemp)"
-              cp k8s/application.yaml "$rendered_manifest"
-              sed -i 's|ghcr.io/ankitraj10022/autonexus/api:latest|${{ steps.image-vars.outputs.api }}:${{ github.sha }}|g' "$rendered_manifest"
-              sed -i 's|ghcr.io/ankitraj10022/autonexus/frontend:latest|${{ steps.image-vars.outputs.frontend }}:${{ github.sha }}|g' "$rendered_manifest"
-              kubectl apply -f "$rendered_manifest"
-              kubectl apply -f k8s/ingress.yaml
-          - name: Verify production rollout
-            env:
-              KUBECONFIG: ${{ env.KUBECONFIG }}
-            run: |
-              kubectl rollout status statefulset/postgres
-              kubectl rollout status statefulset/redis
-              kubectl rollout status deployment/api
-              kubectl rollout status deployment/worker
-              kubectl rollout status deployment/beat
-              kubectl rollout status deployment/frontend
+      - name: Deploy to production
+        env:
+          KUBECONFIG: ${{ env.KUBECONFIG }}
+        run: |
+          kubectl apply -f k8s/infrastructure.yaml
+          rendered_manifest="$(mktemp)"
+          cp k8s/application.yaml "$rendered_manifest"
+          sed -i 's|ghcr.io/ankitraj10022/autonexus/api:latest|${{ steps.image-vars.outputs.api }}:${{ github.sha }}|g' "$rendered_manifest"
+          sed -i 's|ghcr.io/ankitraj10022/autonexus/frontend:latest|${{ steps.image-vars.outputs.frontend }}:${{ github.sha }}|g' "$rendered_manifest"
+          kubectl apply -f "$rendered_manifest"
+          kubectl apply -f k8s/ingress.yaml
+      - name: Verify production rollout
+        env:
+          KUBECONFIG: ${{ env.KUBECONFIG }}
+        run: |
+          kubectl rollout status statefulset/postgres
+          kubectl rollout status statefulset/redis
+          kubectl rollout status deployment/api
+          kubectl rollout status deployment/worker
+          kubectl rollout status deployment/beat
+          kubectl rollout status deployment/frontend

@@ -1,3 +1,20 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: auto-ebs-sc
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: ebs.csi.eks.amazonaws.com
+volumeBindingMode: WaitForFirstConsumer
+allowedTopologies:
+  - matchLabelExpressions:
+      - key: eks.amazonaws.com/compute-type
+        values:
+          - auto
+parameters:
+  type: gp3
+  encrypted: "true"
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -37,6 +54,18 @@ spec:
               value: devpassword123
             - name: POSTGRES_DB
               value: autonexus
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "autonexus", "-d", "autonexus"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "autonexus", "-d", "autonexus"]
+            initialDelaySeconds: 30
+            periodSeconds: 20
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
@@ -45,6 +74,7 @@ spec:
         name: pgdata
       spec:
         accessModes: [ "ReadWriteOnce" ]
+        storageClassName: auto-ebs-sc
         resources:
           requests:
             storage: 10Gi
@@ -81,6 +111,16 @@ spec:
           image: redis:7-alpine
           ports:
             - containerPort: 6379
+          readinessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 15
+            periodSeconds: 20
           volumeMounts:
             - name: redisdata
               mountPath: /data
@@ -89,6 +129,7 @@ spec:
         name: redisdata
       spec:
         accessModes: [ "ReadWriteOnce" ]
+        storageClassName: auto-ebs-sc
         resources:
           requests:
             storage: 5Gi
