@@ -3,10 +3,10 @@ kind: Ingress
 metadata:
   name: autonexus-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
     nginx.ingress.kubernetes.io/websocket-services: "api"
 spec:
+  ingressClassName: nginx
   rules:
     - http:
         paths:
