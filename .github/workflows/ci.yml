@@ -160,7 +160,8 @@ jobs:
             exit 1
           fi
 
-          export KUBECONFIG="$RUNNER_TEMP/kubeconfig.yaml"
+          config_path="$RUNNER_TEMP/kubeconfig.yaml"
+          export KUBECONFIG="$config_path"
           aws eks update-kubeconfig \
             --name "${{ vars.EKS_CLUSTER_NAME }}" \
             --region "${{ vars.AWS_REGION }}" \
@@ -171,6 +172,7 @@ jobs:
           kubectl cluster-info
       - name: Deploy to production
         run: |
+          export KUBECONFIG="$RUNNER_TEMP/kubeconfig.yaml"
           kubectl apply -f k8s/infrastructure.yaml
           rendered_manifest="$(mktemp)"
           cp k8s/application.yaml "$rendered_manifest"
@@ -180,6 +182,7 @@ jobs:
           kubectl apply -f k8s/ingress.yaml
       - name: Verify production rollout
         run: |
+          export KUBECONFIG="$RUNNER_TEMP/kubeconfig.yaml"
           kubectl rollout status statefulset/postgres
           kubectl rollout status statefulset/redis
           kubectl rollout status deployment/api
