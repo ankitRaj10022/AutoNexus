@@ -147,7 +147,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
       - name: Set up kubectl
-        uses: aws/setup-kubectl@v3
+        uses: azure/setup-kubectl@v3
       - name: Configure kubectl for EKS
         run: |
           if [ -z "${{ vars.AWS_REGION }}" ] || [ -z "${{ vars.EKS_CLUSTER_NAME }}" ]; then
