@@ -1,75 +1,73 @@
-<svg width="1400" height="760" viewBox="0 0 1400 760" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1400" height="760" rx="40" fill="#090A12"/>
-  <rect x="34" y="34" width="1332" height="692" rx="28" fill="url(#bg)" stroke="#1F2434"/>
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" rx="36" fill="#07080F"/>
+  <rect x="18" y="18" width="1564" height="864" rx="28" fill="url(#pageBg)" stroke="#1B1E2A"/>
 
-  <rect x="74" y="92" width="604" height="542" rx="28" fill="#0B0C13" stroke="#1E2233"/>
-  <rect x="74" y="92" width="604" height="56" rx="28" fill="#11131B"/>
-  <rect x="96" y="108" width="28" height="28" rx="8" fill="url(#brand)"/>
-  <path d="M112.047 114L101 127.914H107.648L105.16 139.5L116.207 125.586H109.559L112.047 114Z" fill="white"/>
-  <text x="138" y="128" fill="#A78BFA" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">AutoNexus</text>
-  <text x="164" y="290" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="800">Automate your workflows</text>
-  <text x="164" y="354" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="800">with</text>
-  <text x="294" y="354" fill="url(#hero)" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="800">intelligent precision.</text>
-  <text x="164" y="412" fill="#8F98B1" font-family="Arial, Helvetica, sans-serif" font-size="18">Production-grade workflow automation with live execution and a visual builder.</text>
-  <rect x="164" y="454" width="198" height="48" rx="24" fill="url(#button)"/>
-  <text x="190" y="484" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Start Automating</text>
-  <rect x="380" y="454" width="146" height="48" rx="24" fill="#14171F" stroke="#2A3042"/>
-  <text x="417" y="484" fill="#D5DBE9" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">View Features</text>
+  <rect x="18" y="18" width="1564" height="58" rx="28" fill="#0A0B13"/>
+  <line x1="18" y1="76.5" x2="1582" y2="76.5" stroke="#232736"/>
 
-  <rect x="164" y="548" width="146" height="60" rx="18" fill="#10131B" stroke="#24283A"/>
-  <rect x="330" y="548" width="146" height="60" rx="18" fill="#10131B" stroke="#24283A"/>
-  <rect x="496" y="548" width="146" height="60" rx="18" fill="#15111D" stroke="#322540"/>
+  <rect x="58" y="32" width="30" height="30" rx="9" fill="url(#brand)"/>
+  <path d="M75.047 38L64 51.914H70.648L68.16 63.5L79.207 49.586H72.559L75.047 38Z" fill="white"/>
+  <text x="98" y="52" fill="#9C8BFF" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">AutoNexus</text>
 
-  <rect x="722" y="126" width="604" height="500" rx="28" fill="#11131B" stroke="#1E2233"/>
-  <rect x="722" y="126" width="178" height="500" rx="28" fill="#191C28"/>
-  <rect x="750" y="150" width="120" height="30" rx="15" fill="url(#brand)"/>
-  <text x="787" y="170" fill="#F5F3FF" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">AutoNexus</text>
-  <rect x="742" y="212" width="138" height="38" rx="12" fill="#292D63" stroke="#474DB6"/>
-  <text x="777" y="236" fill="#B8BEFF" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">Dashboard</text>
-  <text x="768" y="292" fill="#AAB0C0" font-family="Arial, Helvetica, sans-serif" font-size="14">Workflows</text>
-  <text x="768" y="342" fill="#AAB0C0" font-family="Arial, Helvetica, sans-serif" font-size="14">Team</text>
-  <text x="768" y="392" fill="#AAB0C0" font-family="Arial, Helvetica, sans-serif" font-size="14">API Keys</text>
-  <text x="768" y="442" fill="#AAB0C0" font-family="Arial, Helvetica, sans-serif" font-size="14">Billing</text>
-  <text x="768" y="492" fill="#AAB0C0" font-family="Arial, Helvetica, sans-serif" font-size="14">Settings</text>
+  <text x="1318" y="52" fill="#ECECF5" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">Sign In</text>
+  <rect x="1380" y="28" width="110" height="38" rx="19" fill="#F5F5F7"/>
+  <text x="1407" y="52" fill="#15161D" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">Get Started</text>
 
-  <text x="932" y="176" fill="#F3F4F8" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="800">Dashboard</text>
-  <text x="932" y="202" fill="#8F98B1" font-family="Arial, Helvetica, sans-serif" font-size="15">Overview of your workspace</text>
-  <rect x="932" y="236" width="164" height="74" rx="18" fill="#171A24" stroke="#2A3042"/>
-  <rect x="1114" y="236" width="164" height="74" rx="18" fill="#171A24" stroke="#2A3042"/>
-  <rect x="932" y="332" width="346" height="126" rx="18" fill="#171A24" stroke="#2A3042"/>
-  <rect x="932" y="480" width="346" height="102" rx="18" fill="#171A24" stroke="#2A3042"/>
-  <text x="956" y="266" fill="#8F98B1" font-family="Arial, Helvetica, sans-serif" font-size="13">Total Workflows</text>
-  <text x="956" y="292" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800">1</text>
-  <text x="1138" y="266" fill="#8F98B1" font-family="Arial, Helvetica, sans-serif" font-size="13">Active</text>
-  <text x="1138" y="292" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800">1</text>
-  <text x="956" y="366" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Recent Workflows</text>
-  <circle cx="970" cy="408" r="5" fill="#34D399"/>
-  <text x="986" y="414" fill="#E9ECF5" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Testing</text>
-  <rect x="1200" y="394" width="56" height="24" rx="12" fill="#23285B"/>
-  <text x="1214" y="410" fill="#9EA8FF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">manual</text>
-  <text x="956" y="514" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Usage This Month</text>
-  <text x="956" y="544" fill="#8F98B1" font-family="Arial, Helvetica, sans-serif" font-size="13">Task Executions</text>
-  <rect x="956" y="556" width="278" height="8" rx="4" fill="#202537"/>
-  <rect x="956" y="556" width="42" height="8" rx="4" fill="url(#button)"/>
+  <text x="420" y="276" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800">Automate your workflows</text>
+  <text x="470" y="368" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800">with</text>
+  <text x="585" y="368" fill="url(#headline)" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800">intelligent precision.</text>
+
+  <text x="536" y="460" fill="#93A0B8" font-family="Arial, Helvetica, sans-serif" font-size="18">The production-grade, multi-tenant SaaS platform that empowers your</text>
+  <text x="528" y="495" fill="#93A0B8" font-family="Arial, Helvetica, sans-serif" font-size="18">team to build, monitor, and scale complex automated workflows visually.</text>
+
+  <rect x="614" y="542" width="215" height="54" rx="27" fill="url(#cta)"/>
+  <text x="645" y="575" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Start Automating Free</text>
+  <path d="M790 563L799 570L790 577" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="844" y="542" width="140" height="54" rx="27" fill="#13151D" stroke="#262A3A"/>
+  <text x="879" y="575" fill="#E6E8EF" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">View Features</text>
+
+  <rect x="278" y="690" width="330" height="180" rx="22" fill="#0B0C12" stroke="#262A39"/>
+  <rect x="636" y="690" width="330" height="180" rx="22" fill="#0B0C12" stroke="#262A39"/>
+  <rect x="994" y="690" width="330" height="180" rx="22" fill="#160E1C" stroke="#3A2841"/>
+
+  <rect x="304" y="718" width="44" height="44" rx="12" fill="#171C46"/>
+  <path d="M320 734H332V746H320V734Z" stroke="#8F92FF" stroke-width="2"/>
+  <path d="M329 743H341V755H329V743Z" stroke="#8F92FF" stroke-width="2"/>
+  <text x="304" y="810" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Visual DAG Editor</text>
+  <text x="304" y="844" fill="#9BA5BB" font-family="Arial, Helvetica, sans-serif" font-size="16">Build complex workflows by connecting nodes</text>
+  <text x="304" y="870" fill="#9BA5BB" font-family="Arial, Helvetica, sans-serif" font-size="16">visually. Built on React Flow for flexibility.</text>
+
+  <rect x="662" y="718" width="44" height="44" rx="12" fill="#34164B"/>
+  <path d="M676 742H682L687 732L693 750L699 740H706" stroke="#B77CFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="662" y="810" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Real-time Execution</text>
+  <text x="662" y="844" fill="#9BA5BB" font-family="Arial, Helvetica, sans-serif" font-size="16">Watch your workflows execute in real time with</text>
+  <text x="662" y="870" fill="#9BA5BB" font-family="Arial, Helvetica, sans-serif" font-size="16">our WebSocket-powered Celery backend.</text>
+
+  <rect x="1020" y="718" width="44" height="44" rx="12" fill="#4B1639"/>
+  <path d="M1034 741C1034 737.686 1036.69 735 1040 735H1044C1047.31 735 1050 737.686 1050 741V745H1054V755H1030V745H1034V741Z" stroke="#FF70BE" stroke-width="2"/>
+  <text x="1020" y="810" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Multi-Tenant Secure</text>
+  <text x="1020" y="844" fill="#B3A2BC" font-family="Arial, Helvetica, sans-serif" font-size="16">Enterprise-grade security with isolated</text>
+  <text x="1020" y="870" fill="#B3A2BC" font-family="Arial, Helvetica, sans-serif" font-size="16">workspaces, RBAC, and encrypted API keys.</text>
 
   <defs>
-    <linearGradient id="bg" x1="84" y1="68" x2="1316" y2="710" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#140F2C"/>
-      <stop offset="0.52" stop-color="#090A12"/>
-      <stop offset="1" stop-color="#190A23"/>
+    <linearGradient id="pageBg" x1="106" y1="94" x2="1516" y2="864" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#171235"/>
+      <stop offset="0.44" stop-color="#07080F"/>
+      <stop offset="1" stop-color="#1A0822"/>
     </linearGradient>
-    <linearGradient id="brand" x1="96" y1="108" x2="122" y2="136" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7C3AED"/>
+    <linearGradient id="brand" x1="58" y1="32" x2="88" y2="62" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7D3AED"/>
       <stop offset="1" stop-color="#5B5CEB"/>
     </linearGradient>
-    <linearGradient id="hero" x1="286" y1="320" x2="694" y2="320" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7C83FF"/>
-      <stop offset="0.54" stop-color="#A855F7"/>
-      <stop offset="1" stop-color="#EC4899"/>
+    <linearGradient id="headline" x1="585" y1="308" x2="1138" y2="308" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7884FF"/>
+      <stop offset="0.55" stop-color="#B048F0"/>
+      <stop offset="1" stop-color="#FF5FA5"/>
     </linearGradient>
-    <linearGradient id="button" x1="164" y1="454" x2="362" y2="502" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5B5CEB"/>
-      <stop offset="1" stop-color="#A21BEA"/>
+    <linearGradient id="cta" x1="614" y1="542" x2="829" y2="596" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5146F5"/>
+      <stop offset="1" stop-color="#A11BEB"/>
     </linearGradient>
   </defs>
 </svg>
