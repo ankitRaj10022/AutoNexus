@@ -186,6 +186,12 @@ class ApiClient {
     });
   }
 
+  async deleteWorkflow(id: string): Promise<void> {
+    await this.request<void>(`/workflows/${id}`, {
+      method: "DELETE",
+    });
+  }
+
   async executeWorkflow(
     id: string,
     input?: Record<string, unknown>,

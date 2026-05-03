@@ -1,8 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Clock, GitBranch, Play, Plus, Search, Webhook } from "lucide-react";
+import {
+  Archive,
+  Clock,
+  Copy,
+  GitBranch,
+  Play,
+  Plus,
+  Search,
+  Trash2,
+  Webhook,
+} from "lucide-react";
 
 import { api } from "@/lib/api";
 import type { Workflow } from "@/lib/types";
@@ -12,6 +23,8 @@ export default function WorkflowsPage() {
   const [search, setSearch] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -35,6 +48,81 @@ export default function WorkflowsPage() {
       trigger_type: "manual",
     });
     router.push(`/workflows/${workflow.id}`);
+  };
+
+  const handleDuplicate = async (workflow: Workflow) => {
+    setBusyId(workflow.id);
+    setError("");
+
+    try {
+      const duplicated = await api.createWorkflow({
+        name: `${workflow.name} Copy`,
+        description: workflow.description ?? undefined,
+        dag_definition: workflow.dag_definition,
+        trigger_type: workflow.trigger_type,
+        schedule: workflow.schedule,
+      });
+
+      setWorkflows((current) => [duplicated, ...current]);
+    } catch (errorValue: unknown) {
+      setError(
+        errorValue instanceof Error
+          ? errorValue.message
+          : "Could not duplicate workflow",
+      );
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const handleArchive = async (workflow: Workflow) => {
+    setBusyId(workflow.id);
+    setError("");
+
+    try {
+      const updated = await api.updateWorkflow(workflow.id, {
+        is_active: false,
+      });
+
+      setWorkflows((current) =>
+        current.map((item) => (item.id === workflow.id ? updated : item)),
+      );
+    } catch (errorValue: unknown) {
+      setError(
+        errorValue instanceof Error
+          ? errorValue.message
+          : "Could not archive workflow",
+      );
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const handleDelete = async (workflow: Workflow) => {
+    if (
+      typeof window !== "undefined" &&
+      !window.confirm(`Delete "${workflow.name}"? This cannot be undone.`)
+    ) {
+      return;
+    }
+
+    setBusyId(workflow.id);
+    setError("");
+
+    try {
+      await api.deleteWorkflow(workflow.id);
+      setWorkflows((current) =>
+        current.filter((item) => item.id !== workflow.id),
+      );
+    } catch (errorValue: unknown) {
+      setError(
+        errorValue instanceof Error
+          ? errorValue.message
+          : "Could not delete workflow",
+      );
+    } finally {
+      setBusyId(null);
+    }
   };
 
   const triggerIcon = (type: string) => {
@@ -76,6 +164,12 @@ export default function WorkflowsPage() {
         />
       </div>
 
+      {error && (
+        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          {error}
+        </div>
+      )}
+
       {showCreate && (
         <div
           className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
@@ -112,7 +206,7 @@ export default function WorkflowsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((workflow) => (
-          <a
+          <Link
             key={workflow.id}
             href={`/workflows/${workflow.id}`}
             className="glass-card p-5 cursor-pointer group"
@@ -127,9 +221,52 @@ export default function WorkflowsPage() {
                 }`}
               />
             </div>
-            <h3 className="font-semibold group-hover:text-indigo-400 transition-colors">
-              {workflow.name}
-            </h3>
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-semibold group-hover:text-indigo-400 transition-colors">
+                {workflow.name}
+              </h3>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  className="rounded-lg border border-white/10 bg-white/5 p-2 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    void handleDuplicate(workflow);
+                  }}
+                  disabled={busyId === workflow.id}
+                  title="Duplicate workflow"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  className="rounded-lg border border-white/10 bg-white/5 p-2 text-gray-400 transition-colors hover:bg-white/10 hover:text-amber-300"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    void handleArchive(workflow);
+                  }}
+                  disabled={busyId === workflow.id || !workflow.is_active}
+                  title="Archive workflow"
+                >
+                  <Archive className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  className="rounded-lg border border-white/10 bg-white/5 p-2 text-gray-400 transition-colors hover:bg-white/10 hover:text-red-300"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    void handleDelete(workflow);
+                  }}
+                  disabled={busyId === workflow.id}
+                  title="Delete workflow"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
             <p className="text-sm text-gray-500 mt-1 line-clamp-2">
               {workflow.description || "No description"}
             </p>
@@ -137,11 +274,14 @@ export default function WorkflowsPage() {
               <span className="badge badge-info flex items-center gap-1">
                 {triggerIcon(workflow.trigger_type)} {workflow.trigger_type}
               </span>
+              {!workflow.is_active && (
+                <span className="badge badge-warning">archived</span>
+              )}
               {workflow.schedule && (
                 <span className="badge badge-warning">{workflow.schedule}</span>
               )}
             </div>
-          </a>
+          </Link>
         ))}
       </div>
 
