@@ -4,7 +4,7 @@ A production-grade, horizontally scalable workflow automation platform with mult
 
 ## Product Preview
 
-![AutoNexus product thumbnail](docs/readme-thumbnail.svg)
+![AutoNexus product thumbnail](docs/ThumbNail.png)
 
 Live Project: [https://autonexus-automation.vercel.app/](https://autonexus-automation.vercel.app/)
 
